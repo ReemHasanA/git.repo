@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit form</title>
+    <style>
+        .hide{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form action="">
+        <label for="id">id</label>
+        <input id="no" type="number">
+        <label for="name">name</label>
+        <input id="name" type="text">
+        <button type="button" onclick="ne()">update</button>
+    </form>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th></th>
+        </tr>
+        <tbody id="newRow">
+
+        </tbody>
+        <!-- <tr class="hide">
+            <td id="id0"></td>
+            <td id="name0"></td>
+            <td>
+                <button>edit</button><button onclick="delete parent(this)">X</button>
+            </td> -->
+        </tr>
+    </table>
+    <script>
+        function ne(){
+            
+        let a=document.getElementById('no').value;
+         let name1=document.getElementById('name');   
+        fetch(`https://jsonplaceholder.typicode.com/posts/${a}`, {
+  method: 'PUT',
+  body: JSON.stringify({
+    id: a,
+    name: name1.value,
+    
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((json) => {
+  
+  console.log(json);
+  let row = document.createElement("tr");
+  row.innerHTML=`
+            <td>${a}</td>
+            <td id="name${a}">${json.name}</td>
+            <td>
+                <button id='edit'>edit</button><button id='del' onclick='delete(this)'>X</button>
+            </td>
+       `
+       document.getElementById('newRow').appendChild(row)
+  })
+  let name=document.getElementById('name');
+name.innerHTML=" ";
+};
+
+     </script>
+</body>
+</html>

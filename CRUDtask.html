@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #update{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form action="" id="form">
+        <label for="name">name</label>
+        <input type="text" placeholder="name" name='name' id="name"><br>
+        <label for="age">age</label>
+        <input type="number" placeholder="age" name="age" id="age"><br>
+        <label for="address">address</label>
+        <input type="text" placeholder="address" name="address" id="address"><br>
+        <label for="email">email</label>
+        <input type="email" placeholder="email" name="email" id="email"><br>
+        <button type="button" id="add" onclick="Add()">Add</button> <button type="button" id="update">update</button><button type="reset">reset</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>age</th>
+                <th>address</th>
+                <th>email</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody id="row"></tbody>
+    </table>
+    <script>
+        
+            let peopleList = JSON.parse(localStorage.getItem('listItem')) ?? [];
+        function showData() {
+            let newRaw='';
+            peopleList.forEach(function( element,index ) {
+                newRaw+=`<tr>
+                <td>${element.name}</td>
+                <td>${element.age}</td>
+                <td>${element.address}</td>
+                <td>${element.email}</td>
+                <td><button id='edit' onclick='edit(${index})'>edit</button><button id='del' onclick='del(${index})'>X</button></td>
+            </tr>
+                `
+                document.getElementById('row').innerHTML=newRaw;
+            }); 
+        }
+        
+        document.onload=showData();
+
+        function Add() {
+            let name=document.getElementById('name').value;
+            let age=document.getElementById('age').value;
+            let address=document.getElementById('address').value;
+            let email=document.getElementById('email').value;
+            peopleList.push({
+                name:name,
+                age:age,
+                address:address,
+                email:email
+            });
+            localStorage.setItem('peopleList',JSON.stringify(peopleList));
+            showData();
+            document.getElementById('form').reset();
+        }
+        function del(index) {
+            peopleList.splice(index,1);
+            localStorage.setItem('peopleList',JSON.stringify(peopleList));
+            showData();
+        }
+        function edit(index) {
+            document.getElementById('name').value=peopleList[index].name;
+            document.getElementById('age').value=peopleList[index].age;
+            document.getElementById('address').value=peopleList[index].address;
+            document.getElementById('email').value=peopleList[index].email;
+            document.getElementById('update').style.display='block';
+            document.getElementById('add').style.display='none';
+
+            document.getElementById('update').onclick=function(){
+                peopleList[index].name=document.getElementById('name').value;
+                peopleList[index].age=document.getElementById('age').value ;
+                peopleList[index].address=document.getElementById('address').value;
+                peopleList[index].email=document.getElementById('email').value;
+
+                localStorage.setItem('peopleList',JSON.stringify(peopleList));
+                showData();
+                document.getElementById('form').reset();
+                document.getElementById('update').style.display='none';
+                document.getElementById('add').style.display='inherit';
+
+            }
+        }
+    </script>
+</body>
+</html>
